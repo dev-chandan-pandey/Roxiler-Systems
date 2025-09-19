@@ -60,3 +60,18 @@ DB_DIALECT=postgres
 
 SESSION_SECRET=abc
 PORT=10000
+
+
+User.hasMany(Store, { foreignKey: "owner_id", as: "stores" });
+Store.belongsTo(User, { foreignKey: "owner_id", as: "owner" });
+
+// User ↔ Rating
+User.hasMany(Rating, { foreignKey: "user_id", as: "ratings" });
+Rating.belongsTo(User, { foreignKey: "user_id", as: "user" });
+
+// Store ↔ Rating
+Store.hasMany(Rating, { foreignKey: "store_id", as: "ratings" });
+Rating.belongsTo(Store, { foreignKey: "store_id", as: "store" });
+
+// Special association for user-specific rating
+Store.hasOne(Rating, { foreignKey: "store_id", as: "userRating" });
