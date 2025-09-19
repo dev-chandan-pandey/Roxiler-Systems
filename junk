@@ -1,0 +1,62 @@
+const renderStars = (rating, count) => {
+  const numericRating = parseFloat(rating) || 0;   // ✅ ensures number
+  if (!numericRating) {
+    return <span className="text-muted">No ratings</span>;
+  }
+
+  const stars = [];
+  const roundedRating = Math.round(numericRating);
+
+  for (let i = 1; i <= 5; i++) {
+    stars.push(
+      <i
+        key={i}
+        className={`${i <= roundedRating ? 'fas text-warning' : 'far text-muted'} fa-star`}
+      />
+    );
+  }
+
+  return (
+    <div className="d-flex align-items-center">
+      <div className="me-2">{stars}</div>
+      <span className="small text-muted">
+        {numericRating.toFixed(1)} ({count} rating{count !== 1 ? 's' : ''})
+      </span>
+    </div>
+  );
+};
+
+
+
+const { Sequelize, DataTypes } = require("sequelize");
+require("dotenv").config();
+
+const isRender = !!process.env.RENDER;  // true on Render, false locally
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
+  {
+    host: isRender ? process.env.DB_HOST_INTERNAL : process.env.DB_HOST_EXTERNAL,
+    port: process.env.DB_PORT || 5432,
+    dialect: process.env.DB_DIALECT || "postgres",
+    logging: false,
+  }
+);
+
+
+# External DB host (for local dev)
+DB_HOST_EXTERNAL=dpg-d34ojvu3jp1c73efhjd0-a.oregon-postgres.render.com
+
+# Internal DB host (for when the app runs on Render)
+DB_HOST_INTERNAL=dpg-d34ojvu3jp1c73efhjd0-a
+
+DB_NAME=roxiler_systems
+DB_USER=roxiler_systems_user
+DB_PASSWORD=gfEpoE5kbaUMYY5jyVxQXZIsB2etEy9o
+DB_PORT=5432
+DB_DIALECT=postgres
+
+SESSION_SECRET=abc
+PORT=10000
